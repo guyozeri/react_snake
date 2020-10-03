@@ -4,12 +4,36 @@ import {isEqual, last, uniqWith} from 'lodash';
 import Board, {Cell} from "./components/Board";
 
 function App() {
+    const [turn, setTurn] = useState<number>(0);
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
     const [direction, setDirection] = useState<Cell>({row: 0, col: 1});
     const initialSnake: Cell[] = [{row: 1, col: 1}, {row: 1, col: 2}, {row: 1, col: 3}];
     const [snake, setSnake] = useState<{ row: number, col: number }[]>(initialSnake)
     const [isLost, setIsLost] = useState<boolean>(false)
     const dim = 15;
+    const [foodCell, setFoodCell] = useState<Cell>({
+        row: Math.floor(Math.random() * dim),
+        col: Math.floor(Math.random() * dim)
+    })
+
+
+    const moveSnake = useCallback((shouldSlice: boolean = true) => {
+        setSnake(prevSnake => {
+            const head = last(prevSnake);
+            const initialIndex = isEqual(head, foodCell) ? 0 : 1;
+            if (isEqual(head, foodCell)) {
+                setFoodCell({
+                    row: Math.floor(Math.random() * dim),
+                    col: Math.floor(Math.random() * dim)
+                });
+            }
+            const newSnake = prevSnake.slice(initialIndex, prevSnake.length)
+            if (head) {
+                newSnake.push({row: head.row + direction.row, col: head.col + direction.col})
+            }
+            return newSnake
+        });
+    }, [foodCell, direction]);
 
     useEffect(() => {
         const head = last(snake);
@@ -25,22 +49,12 @@ function App() {
         }
     }, [snake])
 
-    const moveSnake = useCallback(() => {
-        setSnake(prevSnake => {
-            const head = last(prevSnake);
-            const newSnake = prevSnake.slice(1, prevSnake.length)
-            if (head) {
-                newSnake.push({row: head.row + direction.row, col: head.col + direction.col})
-            }
-            return newSnake
-        })
-    }, [direction]);
-
+    useEffect(moveSnake, [turn])
 
     useEffect(() => {
         if (isPlaying) {
             const interval = setInterval(
-                moveSnake, 250
+                () => setTurn(prevState => prevState += 1), 250
             );
             return () => clearInterval(interval);
         }
@@ -84,7 +98,7 @@ function App() {
                 <div>
                     <h1>{isPlaying ? "Playing" : "Press space to start"}</h1>
                     {!isLost || <h1>lost</h1>}
-                    <Board snake={snake} dim={dim}/>
+                    <Board snake={snake} food={foodCell} dim={dim}/>
                 </div>
             </header>
         </div>
