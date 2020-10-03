@@ -40,7 +40,7 @@ function App() {
     useEffect(() => {
         if (isPlaying) {
             const interval = setInterval(
-                moveSnake, 500
+                moveSnake, 250
             );
             return () => clearInterval(interval);
         }
@@ -56,22 +56,25 @@ function App() {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        switch (event.key) {
-            case ' ':
+        if (isPlaying) {
+            switch (event.key) {
+                case 'ArrowRight':
+                    changeDirection(0, 1);
+                    break;
+                case 'ArrowLeft':
+                    changeDirection(0, -1);
+                    break;
+                case 'ArrowDown':
+                    changeDirection(1, 0);
+                    break;
+                case 'ArrowUp':
+                    changeDirection(-1, 0);
+                    break;
+            }
+        } else {
+            if (event.key === ' ') {
                 setIsPlaying(isPlaying => !isPlaying);
-                break;
-            case 'ArrowRight':
-                changeDirection(0, 1);
-                break;
-            case 'ArrowLeft':
-                changeDirection(0, -1);
-                break;
-            case 'ArrowDown':
-                changeDirection(1, 0);
-                break;
-            case 'ArrowUp':
-                changeDirection(-1, 0);
-                break;
+            }
         }
     }
 
@@ -81,7 +84,7 @@ function App() {
                 <div>
                     <h1>{isPlaying ? "Playing" : "Press space to start"}</h1>
                     {!isLost || <h1>lost</h1>}
-                    <Board snake={snake} dim={dim} />
+                    <Board snake={snake} dim={dim}/>
                 </div>
             </header>
         </div>
