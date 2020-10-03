@@ -1,16 +1,20 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import './App.css';
 import {isEqual, last, uniqWith} from 'lodash';
 import Board, {Cell} from "./components/Board";
 
 function App() {
+    const initialSnake: Cell[] = useMemo(() => [{row: 1, col: 1}, {row: 1, col: 2}, {row: 1, col: 3}], []);
+    const initialDirection: Cell = useMemo(() => {
+        return {row: 0, col: 1}
+    }, []);
+    const dim = 15;
+
     const [turn, setTurn] = useState<number>(0);
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
-    const [direction, setDirection] = useState<Cell>({row: 0, col: 1});
-    const initialSnake: Cell[] = [{row: 1, col: 1}, {row: 1, col: 2}, {row: 1, col: 3}];
+    const [direction, setDirection] = useState<Cell>(initialDirection);
     const [snake, setSnake] = useState<{ row: number, col: number }[]>(initialSnake)
     const [isLost, setIsLost] = useState<boolean>(false)
-    const dim = 15;
     const [foodCell, setFoodCell] = useState<Cell>({
         row: Math.floor(Math.random() * dim),
         col: Math.floor(Math.random() * dim)
@@ -39,7 +43,7 @@ function App() {
         const head = last(snake);
         let touchedEdge = false;
         if (head) {
-            touchedEdge = head.row < 0 || head.row > dim || head.col < 0 || head.col > dim;
+            touchedEdge = head.row < 0 || head.row >= dim || head.col < 0 || head.col >= dim;
         }
         if (uniqWith(snake, isEqual).length !== snake.length || touchedEdge) {
             setIsLost(true);
@@ -53,8 +57,15 @@ function App() {
 
     useEffect(() => {
         if (isPlaying) {
+            setSnake(initialSnake);
+            setDirection(initialDirection)
+        }
+    }, [initialDirection, initialSnake, isPlaying])
+
+    useEffect(() => {
+        if (isPlaying) {
             const interval = setInterval(
-                () => setTurn(prevState => prevState += 1), 250
+                () => setTurn(prevState => prevState += 1), 200
             );
             return () => clearInterval(interval);
         }
