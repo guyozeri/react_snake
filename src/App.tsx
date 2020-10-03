@@ -1,12 +1,18 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import './App.css';
-import {findIndex, last} from 'lodash';
+import {findIndex, last, uniqWith, isEqual} from 'lodash';
+
+interface Cell {
+    row: number;
+    col: number;
+}
 
 function App() {
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
-    const [direction, setDirection] = useState<{ row: number, col: number }>({row: 0, col: 1});
-    const initialSnake: { row: number, col: number }[] = [{row: 1, col: 1}, {row: 1, col: 2}, {row: 1, col: 3}];
+    const [direction, setDirection] = useState<Cell>({row: 0, col: 1});
+    const initialSnake: Cell[] = [{row: 1, col: 1}, {row: 1, col: 2}, {row: 1, col: 3}];
     const [snake, setSnake] = useState<{ row: number, col: number }[]>(initialSnake)
+    const [isLost, setIsLost] = useState<boolean>(false)
     const dim = 15;
     const board = [];
     const row = [];
@@ -17,14 +23,24 @@ function App() {
         board.push(row);
     }
 
+    useEffect(() => {
+        const head = last(snake);
+        let touchedEdge = false;
+        if (head) {
+            touchedEdge = head.row < 0 || head.row > dim || head.col < 0 || head.col > dim;
+        }
+        setIsLost(uniqWith(snake, isEqual).length !== snake.length || touchedEdge);
+        setIsPlaying(!(uniqWith(snake, isEqual).length !== snake.length || touchedEdge));
+    }, [snake])
+
     const moveSnake = useCallback(() => {
-        setSnake(prevState => {
-            const lastCell = last(prevState);
-            const newState = prevState.slice(1, prevState.length)
-            if (lastCell) {
-                newState.push({row: lastCell.row + direction.row, col: lastCell.col + direction.col})
+        setSnake(prevSnake => {
+            const head = last(prevSnake);
+            const newSnake = prevSnake.slice(1, prevSnake.length)
+            if (head) {
+                newSnake.push({row: head.row + direction.row, col: head.col + direction.col})
             }
-            return newState
+            return newSnake
         })
     }, [direction]);
 
@@ -72,6 +88,7 @@ function App() {
             <header className="App-header">
                 <div>
                     <h1>{isPlaying ? "Playing" : "Press space to start"}</h1>
+                    {!isLost || <h1>lost</h1>}
                     <table>
                         {
                             board.map((value, index) => <tr>
