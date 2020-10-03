@@ -1,11 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import './App.css';
-import {findIndex, last, uniqWith, isEqual} from 'lodash';
-
-interface Cell {
-    row: number;
-    col: number;
-}
+import {isEqual, last, uniqWith} from 'lodash';
+import Board, {Cell} from "./components/Board";
 
 function App() {
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
@@ -14,14 +10,6 @@ function App() {
     const [snake, setSnake] = useState<{ row: number, col: number }[]>(initialSnake)
     const [isLost, setIsLost] = useState<boolean>(false)
     const dim = 15;
-    const board = [];
-    const row = [];
-    for (let i = 0; i < dim; i++) {
-        row.push(0);
-    }
-    for (let i = 0; i < dim; i++) {
-        board.push(row);
-    }
 
     useEffect(() => {
         const head = last(snake);
@@ -29,8 +17,12 @@ function App() {
         if (head) {
             touchedEdge = head.row < 0 || head.row > dim || head.col < 0 || head.col > dim;
         }
-        setIsLost(uniqWith(snake, isEqual).length !== snake.length || touchedEdge);
-        setIsPlaying(!(uniqWith(snake, isEqual).length !== snake.length || touchedEdge));
+        if (uniqWith(snake, isEqual).length !== snake.length || touchedEdge) {
+            setIsLost(true);
+            setIsPlaying(false);
+        } else {
+            setIsLost(false);
+        }
     }, [snake])
 
     const moveSnake = useCallback(() => {
@@ -89,22 +81,7 @@ function App() {
                 <div>
                     <h1>{isPlaying ? "Playing" : "Press space to start"}</h1>
                     {!isLost || <h1>lost</h1>}
-                    <table>
-                        {
-                            board.map((value, index) => <tr>
-                                {
-                                    value.map((value, secondIndex) =>
-                                        <td style={findIndex(snake, {
-                                            row: index,
-                                            col: secondIndex
-                                        }) !== -1 ? {backgroundColor: "white"} : {}}>
-                                            bla
-                                        </td>
-                                    )
-                                }
-                            </tr>)
-                        }
-                    </table>
+                    <Board snake={snake} dim={dim} />
                 </div>
             </header>
         </div>
