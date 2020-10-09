@@ -81,6 +81,7 @@ function App() {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
+        event.preventDefault();
         if (isPlaying) {
             switch (event.key) {
                 case 'ArrowRight':
@@ -109,6 +110,7 @@ function App() {
                 <div>
                     <h1>{isPlaying ? "Playing" : "Press space to start"}</h1>
                     {!isLost || <h1>lost</h1>}
+                    <h1>score: {snake.length}</h1>
                     <Board snake={snake} food={foodCell} dim={dim}/>
                 </div>
             </header>
