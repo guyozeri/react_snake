@@ -1,11 +1,11 @@
-$cell-size: 20px;
 
 table {
   border: black solid;
-  td {
-    height: $cell-size;
-    width: $cell-size;
-  }
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .food {

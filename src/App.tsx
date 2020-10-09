@@ -112,10 +112,21 @@ function App() {
         <div className="App" tabIndex={0} onKeyDown={handleKeyDown}>
             <header className="App-header">
                 <div>
-                    <h1>{isPlaying ? "Playing" : "Press space to start"}</h1>
-                    {!isLost || <h1>lost</h1>}
                     <h1>score: {snake.length}</h1>
-                    <Board snake={snake} food={foodCell} dim={dim}/>
+                    <div className={"Container"}>
+                        <div className={`Information ${isPlaying? '': 'Overlay'}`}>
+                            <div>
+                            {!isLost || <>
+                            <h2>Lost!</h2>
+                            <h2>score: {snake.length}</h2>
+                            </>}
+                            {isPlaying || <h2>Press space to start</h2>}
+                            </div>
+                        </div>
+                        <div className={"Board"}>
+                            <Board snake={snake} food={foodCell} dim={dim}/>
+                        </div>
+                    </div>
                 </div>
             </header>
         </div>
