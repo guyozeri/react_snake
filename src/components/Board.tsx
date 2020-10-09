@@ -1,5 +1,6 @@
 import React, {FC} from "react";
 import {findIndex} from "lodash";
+import "./Board.scss";
 
 export interface Cell {
     row: number;
@@ -39,7 +40,6 @@ const Board: FC<BoardProps> = ({snake, food, dim}) => {
                             }
                         }
                             return <td style={style}>
-                                bla
                             </td>
                         }
                     )

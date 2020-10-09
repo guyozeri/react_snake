@@ -1,0 +1,9 @@
+$cell-size: 20px;
+
+table {
+  border: black solid;
+  td {
+    height: $cell-size;
+    width: $cell-size;
+  }
+}
