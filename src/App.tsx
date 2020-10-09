@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import './App.css';
+import './App.scss';
 import {isEqual, last, uniqWith} from 'lodash';
 import Board, {Cell} from "./components/Board";
 
@@ -81,24 +81,28 @@ function App() {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        event.preventDefault();
         if (isPlaying) {
             switch (event.key) {
                 case 'ArrowRight':
+                    event.preventDefault();
                     changeDirection(0, 1);
                     break;
                 case 'ArrowLeft':
+                    event.preventDefault();
                     changeDirection(0, -1);
                     break;
                 case 'ArrowDown':
+                    event.preventDefault();
                     changeDirection(1, 0);
                     break;
                 case 'ArrowUp':
+                    event.preventDefault();
                     changeDirection(-1, 0);
                     break;
             }
         } else {
             if (event.key === ' ') {
+                event.preventDefault();
                 setIsPlaying(isPlaying => !isPlaying);
             }
         }
@@ -108,10 +112,21 @@ function App() {
         <div className="App" tabIndex={0} onKeyDown={handleKeyDown}>
             <header className="App-header">
                 <div>
-                    <h1>{isPlaying ? "Playing" : "Press space to start"}</h1>
-                    {!isLost || <h1>lost</h1>}
                     <h1>score: {snake.length}</h1>
-                    <Board snake={snake} food={foodCell} dim={dim}/>
+                    <div className={"Container"}>
+                        <div className={`Information ${isPlaying? '': 'Overlay'}`}>
+                            <div>
+                            {!isLost || <>
+                            <h2>Lost!</h2>
+                            <h2>score: {snake.length}</h2>
+                            </>}
+                            {isPlaying || <h2>Press space to start</h2>}
+                            </div>
+                        </div>
+                        <div className={"Board"}>
+                            <Board snake={snake} food={foodCell} dim={dim}/>
+                        </div>
+                    </div>
                 </div>
             </header>
         </div>

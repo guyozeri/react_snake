@@ -1,5 +1,6 @@
 import React, {FC} from "react";
 import {findIndex} from "lodash";
+import "./Board.scss";
 
 export interface Cell {
     row: number;
@@ -27,20 +28,18 @@ const Board: FC<BoardProps> = ({snake, food, dim}) => {
             board.map((value, index) => <tr>
                 {
                     value.map((value, secondIndex) => {
-                        let style = {};
+                        let className = '';
                         if (findIndex(snake, {
                                 row: index,
                                 col: secondIndex
                             }) !== -1) {
-                            style = {backgroundColor: "white"};
+                            className = "snake";
                         } else {
                             if (food.row === index && food.col === secondIndex) {
-                                style = {backgroundColor: "red"};
+                                className = "food";
                             }
                         }
-                            return <td style={style}>
-                                bla
-                            </td>
+                            return <td className={className} />
                         }
                     )
                 }

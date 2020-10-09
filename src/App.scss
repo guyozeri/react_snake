@@ -1,0 +1,58 @@
+
+// Override Sass min()
+@function min($numbers...) {
+  @return m#{i}n(#{$numbers});
+}
+
+$board-size: min(80vh, 80vw);
+
+.Container {
+  height: $board-size;
+  width: $board-size;
+  position: relative;
+}
+
+.Information, .Board {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.Information {
+  z-index: 10;
+  position: relative;
+
+  div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0 -50% 0 0;
+    transform: translate(-50%, -50%)
+  }
+
+  h2 {
+    margin: auto;
+  }
+}
+
+.Overlay {
+  background-color: hsla(0, 0%, 0%, 0.75);;
+}
+
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
