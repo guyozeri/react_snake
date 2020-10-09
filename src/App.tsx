@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import './App.css';
+import './App.scss';
 import {isEqual, last, uniqWith} from 'lodash';
 import Board, {Cell} from "./components/Board";
 
