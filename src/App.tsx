@@ -77,6 +77,9 @@ function App() {
         if (direction.row === row && direction.col === col) {
             return;
         }
+        if (direction.row === -row || direction.col === -col) {
+            return;
+        }
         setDirection({row, col});
     }
 
