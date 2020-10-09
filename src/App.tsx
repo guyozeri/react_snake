@@ -81,24 +81,28 @@ function App() {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        event.preventDefault();
         if (isPlaying) {
             switch (event.key) {
                 case 'ArrowRight':
+                    event.preventDefault();
                     changeDirection(0, 1);
                     break;
                 case 'ArrowLeft':
+                    event.preventDefault();
                     changeDirection(0, -1);
                     break;
                 case 'ArrowDown':
+                    event.preventDefault();
                     changeDirection(1, 0);
                     break;
                 case 'ArrowUp':
+                    event.preventDefault();
                     changeDirection(-1, 0);
                     break;
             }
         } else {
             if (event.key === ' ') {
+                event.preventDefault();
                 setIsPlaying(isPlaying => !isPlaying);
             }
         }
